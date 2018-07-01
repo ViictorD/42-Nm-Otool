@@ -6,7 +6,7 @@
 /*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/23 22:47:58 by vdarmaya          #+#    #+#             */
-/*   Updated: 2018/06/27 17:02:05 by vdarmaya         ###   ########.fr       */
+/*   Updated: 2018/07/01 16:21:00 by vdarmaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,14 +61,14 @@ static void		ft_otool(void *ptr, struct mach_header_64 *header, \
 		{
 			seg = (struct segment_command_64*)lc;
 			sec = (struct section_64*)((void*)lc + sizeof(*seg));
-			if (CHECK_SECTION(sec->segname, sec->sectname))
+			if (C_SECTION(sec->segname, sec->sectname))
 			{
 				j = -1;
 				while (++j < seg->nsects)
 				{
 					sec = (struct section_64*)((void*)lc + sizeof(*seg) + \
 						(sizeof(struct section_64) * j));
-					if (CHECK_SECTION(sec->segname, sec->sectname))
+					if (C_SECTION(sec->segname, sec->sectname))
 						print_otool(sec, ptr + sec->offset);
 				}
 			}
@@ -94,7 +94,8 @@ static void		handle_binary_otool(int fd)
 		return ;
 	}
 	if ((unsigned int)*(int*)ptr == MH_MAGIC_64)
-		ft_otool(ptr, (struct mach_header_64*)ptr, ptr + sizeof(struct mach_header_64), 0);
+		ft_otool(ptr, (struct mach_header_64*)ptr, ptr + \
+			sizeof(struct mach_header_64), 0);
 	if ((munmap(ptr, buff.st_size)) < 0)
 	{
 		ft_putstr("ft_otool: Munmap binary failed");
@@ -107,11 +108,6 @@ int				main(int ac, char **av)
 	int		i;
 	int		fd;
 
-	if (ac < 2)
-	{
-		ft_fputstr("ft_otool: No such file or directory.", 2);
-		return (1);
-	}
 	i = 0;
 	while (++i < ac)
 	{
@@ -127,4 +123,6 @@ int				main(int ac, char **av)
 		handle_binary_otool(fd);
 		close(fd);
 	}
+	if (ac < 2)
+		ft_fputendl("ft_otool: No such file or directory.", 2);
 }

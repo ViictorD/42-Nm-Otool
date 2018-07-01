@@ -6,13 +6,13 @@
 /*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/24 20:12:15 by vdarmaya          #+#    #+#             */
-/*   Updated: 2018/06/24 22:57:56 by vdarmaya         ###   ########.fr       */
+/*   Updated: 2018/07/01 16:07:22 by vdarmaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_nm.h"
 
-void	free_block(t_block *b)
+void		free_block(t_block *b)
 {
 	t_block	*tmp;
 
@@ -25,7 +25,7 @@ void	free_block(t_block *b)
 	}
 }
 
-t_block	*new_block(int i, char *name)
+t_block		*new_block(int i, char *name)
 {
 	t_block	*new;
 
@@ -36,7 +36,7 @@ t_block	*new_block(int i, char *name)
 	return (new);
 }
 
-void	include_before(t_block **begin, t_block *sort, t_block *last, \
+void		include_before(t_block **begin, t_block *sort, t_block *last, \
 			t_block *new)
 {
 	if (*begin == sort)
@@ -49,7 +49,7 @@ void	include_before(t_block **begin, t_block *sort, t_block *last, \
 	last->next = new;
 }
 
-t_sorted		*get_index_block(t_block *begin)
+t_sorted	*get_index_block(t_block *begin)
 {
 	int			i;
 	t_block		*b;

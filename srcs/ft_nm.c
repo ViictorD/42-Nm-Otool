@@ -6,7 +6,7 @@
 /*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/23 21:58:29 by vdarmaya          #+#    #+#             */
-/*   Updated: 2018/06/26 16:34:38 by vdarmaya         ###   ########.fr       */
+/*   Updated: 2018/07/01 16:18:36 by vdarmaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,6 @@ static t_sorted	*get_index(struct nlist_64 *array, unsigned int nsyms, \
 	i = 0;
 	while (i < nsyms)
 	{
-		struct nlist_64	test = array[i];
-		char *test2 = string_table + array[i].n_un.n_strx;
 		if (array[i].n_type == 14 || array[i].n_type == 15 || \
 			array[i].n_desc == 16 || array[i].n_type == N_EXT)
 		{
@@ -81,7 +79,8 @@ static void		ft_nm(void *ptr)
 		if (lc->cmd == LC_SYMTAB)
 		{
 			sym = (struct symtab_command*)lc;
-			sorted = get_index(ptr + sym->symoff, sym->nsyms, ptr + sym->stroff);
+			sorted = get_index(ptr + sym->symoff, sym->nsyms, ptr + \
+				sym->stroff);
 			print_output(sorted, ptr + sym->symoff, ptr + sym->stroff);
 			free(sorted->count);
 			free(sorted);
@@ -115,16 +114,11 @@ static void		handle_binary(int fd)
 	}
 }
 
-int			main(int ac, char **av)
+int				main(int ac, char **av)
 {
 	int		i;
 	int		fd;
 
-	if (ac < 2)
-	{
-		ft_fputstr("ft_nm: No such file or directory.", 2);
-		return (1);
-	}
 	i = 0;
 	while (++i < ac)
 	{
@@ -144,5 +138,7 @@ int			main(int ac, char **av)
 		handle_binary(fd);
 		close(fd);
 	}
+	if (ac < 2)
+		ft_fputendl("ft_nm: No such file or directory.", 2);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/23 21:59:37 by vdarmaya          #+#    #+#             */
-/*   Updated: 2018/06/25 15:09:14 by vdarmaya         ###   ########.fr       */
+/*   Updated: 2018/07/01 16:19:36 by vdarmaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,12 @@ typedef struct		s_sorted
 	int				tab_size;
 }					t_sorted;
 
-void				include_before(t_block **begin, t_block *sort, t_block *last, t_block *new);
+void				include_before(t_block **begin, t_block *sort, \
+						t_block *last, t_block *new);
 t_sorted			*get_index_block(t_block *b);
 t_block				*new_block(int i, char *name);
 void				free_block(t_block *b);
 void				print_output(t_sorted *index, struct nlist_64 *array, \
 						char *string_table);
-
-
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/24 22:23:18 by vdarmaya          #+#    #+#             */
-/*   Updated: 2018/06/26 18:35:05 by vdarmaya         ###   ########.fr       */
+/*   Updated: 2018/07/01 16:11:24 by vdarmaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,24 @@ void		put_hexa(long nb)
 	free(num);
 }
 
+static void	print_output2(t_sorted *index, struct nlist_64 *array, int i)
+{
+	if (array[index->count[i]].n_type == 14)
+	{
+		if (array[index->count[i]].n_sect == '\t')
+			ft_putstr(" d ");
+		else if (array[index->count[i]].n_sect == '\n')
+			ft_putstr(" b ");
+		else
+			ft_putstr(" t ");
+	}
+	else if (array[index->count[i]].n_type == 15 && \
+			array[index->count[i]].n_sect == '\b')
+		ft_putstr(" D ");
+	else
+		ft_putstr(" T ");
+}
+
 void		print_output(t_sorted *index, struct nlist_64 *array, \
 				char *string_table)
 {
@@ -49,20 +67,7 @@ void		print_output(t_sorted *index, struct nlist_64 *array, \
 			array[index->count[i]].n_desc == 16)
 		{
 			put_hexa(array[index->count[i]].n_value);
-			if (array[index->count[i]].n_type == 14)
-			{
-				if (array[index->count[i]].n_sect == '\t')
-					ft_putstr(" d ");
-				else if (array[index->count[i]].n_sect == '\n')
-					ft_putstr(" b ");
-				else
-					ft_putstr(" t ");
-			}
-			else if (array[index->count[i]].n_type == 15 && \
-					array[index->count[i]].n_sect == '\b')
-				ft_putstr(" D ");
-			else
-				ft_putstr(" T ");
+			print_output2(index, array, i);
 			ft_putendl(string_table + array[index->count[i]].n_un.n_strx);
 		}
 		else if (array[index->count[i]].n_type == N_EXT)
