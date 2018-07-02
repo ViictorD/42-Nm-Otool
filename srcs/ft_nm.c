@@ -6,7 +6,7 @@
 /*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/23 21:58:29 by vdarmaya          #+#    #+#             */
-/*   Updated: 2018/07/01 16:18:36 by vdarmaya         ###   ########.fr       */
+/*   Updated: 2018/07/02 05:15:31 by vdarmaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,15 @@ static t_sorted	*get_index(struct nlist_64 *array, unsigned int nsyms, \
 	unsigned int	i;
 	t_block			*begin;
 	t_sorted		*out;
+	char			type;
 
 	begin = NULL;
 	i = 0;
 	while (i < nsyms)
 	{
-		if (array[i].n_type == 14 || array[i].n_type == 15 || \
-			array[i].n_desc == 16 || array[i].n_type == N_EXT)
+		type = array[i].n_type & N_TYPE;
+		if ((type == N_UNDF || type == N_PBUD || type == N_ABS || \
+			type == N_SECT || type == N_INDR) && !(array[i].n_type & N_STAB))
 		{
 			get_index2(&begin, string_table, array, i);
 			if (!begin)
@@ -63,50 +65,55 @@ static t_sorted	*get_index(struct nlist_64 *array, unsigned int nsyms, \
 	return (out);
 }
 
-static void		ft_nm(void *ptr)
+static void		ft_nm(void *ptr, unsigned int filesize, \
+			struct mach_header_64 *header, struct load_command *lc)
 {
-	struct mach_header_64	*header;
-	struct load_command		*lc;
 	struct symtab_command	*sym;
 	unsigned int			i;
 	t_sorted				*sorted;
+	char					*arr[256];
 
-	header = (struct mach_header_64*)ptr;
-	lc = ptr + sizeof(struct mach_header_64);
 	i = 0;
+	arr[0] = NULL;
 	while (i < header->ncmds)
 	{
 		if (lc->cmd == LC_SYMTAB)
 		{
 			sym = (struct symtab_command*)lc;
-			sorted = get_index(ptr + sym->symoff, sym->nsyms, ptr + \
-				sym->stroff);
-			print_output(sorted, ptr + sym->symoff, ptr + sym->stroff);
-			free(sorted->count);
-			free(sorted);
+			if (sym->symoff > filesize)
+				ft_exiterror("Binary corrupted", 1);
 		}
+		else if (lc->cmd == LC_SEGMENT_64)
+			find_seg64((struct segment_command_64*)lc, arr);
 		lc = (void*)lc + lc->cmdsize;
 		++i;
 	}
+	sorted = get_index(ptr + sym->symoff, sym->nsyms, ptr + sym->stroff);
+	print_output(sorted, ptr + sym->symoff, ptr + sym->stroff, arr);
+	free(sorted->count);
+	free(sorted);
 }
 
 static void		handle_binary(int fd)
 {
 	void			*ptr;
 	struct stat		buff;
+	char			fail;
 
-	if (fstat(fd, &buff) < 0)
-	{
+	if (fstat(fd, &buff) < 0 && (fail = 1))
 		ft_putstr("ft_nm: Open file failed");
-		return ;
-	}
-	if ((ptr = mmap(NULL, buff.st_size, PROT_READ, MAP_PRIVATE, fd, 0)) < 0)
-	{
+	else if ((unsigned long)buff.st_size <= sizeof(struct mach_header_64) + \
+		sizeof(struct load_command) && (fail = 1))
+		ft_putstr("ft_nm: Binary too small");
+	else if ((ptr = mmap(NULL, buff.st_size, PROT_READ, MAP_PRIVATE, fd, \
+		0)) < 0 && (fail = 1))
 		ft_putstr("ft_nm: Mmap binary failed");
+	if (fail)
 		return ;
-	}
 	if ((unsigned int)*(int*)ptr == MH_MAGIC_64)
-		ft_nm(ptr);
+		ft_nm(ptr, buff.st_size, ptr, ptr + sizeof(struct mach_header_64));
+	else
+		ft_fputstr("ft_nm: Not a 64 bits file format\n", 2);
 	if ((munmap(ptr, buff.st_size)) < 0)
 	{
 		ft_putstr("ft_nm: Munmap binary failed");

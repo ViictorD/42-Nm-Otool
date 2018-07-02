@@ -6,27 +6,15 @@
 /*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/23 22:47:58 by vdarmaya          #+#    #+#             */
-/*   Updated: 2018/07/01 16:21:00 by vdarmaya         ###   ########.fr       */
+/*   Updated: 2018/07/02 05:29:18 by vdarmaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_otool.h"
 
-static void		print_one_hexa(unsigned char nb, char first)
-{
-	if (first && (nb < 16 || !nb))
-		ft_putchar('0');
-	if (nb >= 16)
-		print_one_hexa(nb / 16, 0);
-	if (nb % 16 < 10)
-		ft_putchar((nb % 16) + 48);
-	else
-		ft_putchar((nb % 16) + 87);
-}
-
 static void		print_otool(struct section_64 *sec, void *ptr)
 {
-	int				i;
+	unsigned int	i;
 	int				j;
 	unsigned char	tmp;
 
@@ -48,13 +36,32 @@ static void		print_otool(struct section_64 *sec, void *ptr)
 	}
 }
 
+static void		ft_otool2(void *ptr, struct load_command *lc, \
+					struct segment_command_64 *seg, size_t filesize)
+{
+	unsigned int		j;
+	struct section_64	*sec;
+
+	j = -1;
+	while (++j < seg->nsects)
+	{
+		sec = (struct section_64*)((void*)lc + sizeof(*seg) + \
+			(sizeof(struct section_64) * j));
+		if (sec->offset + sec->size > filesize)
+			ft_exiterror("Binary corrupted", 1);
+		if (C_SECTION(sec->segname, sec->sectname))
+			print_otool(sec, ptr + sec->offset);
+	}
+}
+
 static void		ft_otool(void *ptr, struct mach_header_64 *header, \
-					struct load_command *lc, int i)
+					unsigned int i, size_t filesize)
 {
 	struct segment_command_64	*seg;
 	struct section_64			*sec;
-	int							j;
+	struct load_command			*lc;
 
+	lc = ptr + sizeof(struct mach_header_64);
 	while (i < header->ncmds)
 	{
 		if (lc->cmd == LC_SEGMENT_64)
@@ -62,16 +69,7 @@ static void		ft_otool(void *ptr, struct mach_header_64 *header, \
 			seg = (struct segment_command_64*)lc;
 			sec = (struct section_64*)((void*)lc + sizeof(*seg));
 			if (C_SECTION(sec->segname, sec->sectname))
-			{
-				j = -1;
-				while (++j < seg->nsects)
-				{
-					sec = (struct section_64*)((void*)lc + sizeof(*seg) + \
-						(sizeof(struct section_64) * j));
-					if (C_SECTION(sec->segname, sec->sectname))
-						print_otool(sec, ptr + sec->offset);
-				}
-			}
+				ft_otool2(ptr, lc, seg, filesize);
 		}
 		lc = (void*)lc + lc->cmdsize;
 		++i;
@@ -94,8 +92,9 @@ static void		handle_binary_otool(int fd)
 		return ;
 	}
 	if ((unsigned int)*(int*)ptr == MH_MAGIC_64)
-		ft_otool(ptr, (struct mach_header_64*)ptr, ptr + \
-			sizeof(struct mach_header_64), 0);
+		ft_otool(ptr, (struct mach_header_64*)ptr, 0, buff.st_size);
+	else
+		ft_fputstr("ft_nm: Not a 64 bits file format\n", 2);
 	if ((munmap(ptr, buff.st_size)) < 0)
 	{
 		ft_putstr("ft_otool: Munmap binary failed");

@@ -6,7 +6,7 @@
 /*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/24 20:12:15 by vdarmaya          #+#    #+#             */
-/*   Updated: 2018/07/01 16:07:22 by vdarmaya         ###   ########.fr       */
+/*   Updated: 2018/07/02 00:07:43 by vdarmaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ t_block		*new_block(int i, char *name)
 {
 	t_block	*new;
 
-	new = (t_block*)malloc(sizeof(t_block));
+	if (!(new = (t_block*)malloc(sizeof(t_block))))
+		ft_exiterror("Malloc failed\n", 1);
 	new->index = i;
 	new->name = ft_strdup(name);
 	new->next = NULL;
@@ -62,8 +63,10 @@ t_sorted	*get_index_block(t_block *begin)
 		++i;
 		b = b->next;
 	}
-	sorted = (t_sorted*)malloc(sizeof(t_sorted));
-	sorted->count = (int*)malloc(sizeof(int) * i);
+	if (!(sorted = (t_sorted*)malloc(sizeof(t_sorted))))
+		ft_exiterror("Malloc failed\n", 1);
+	if (!(sorted->count = (int*)malloc(sizeof(int) * i)))
+		ft_exiterror("Malloc failed\n", 1);
 	i = -1;
 	b = begin;
 	while (b)

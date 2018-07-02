@@ -16,10 +16,11 @@ SRC_DIR = ./srcs/
 
 FILES_NM = ft_nm.c \
 			ft_nm2.c \
-			sort.c
+			utils.c \
+			sort.c 
 
 FILES_OTOOL = ft_otool.c \
-				ft_nm2.c
+				utils.c \
 
 SRCS_NM = $(addprefix $(SRC_DIR), $(FILES_NM))
 
@@ -71,3 +72,4 @@ debug: mkdirobj
 re: fclean all
 
 .PHONY : all clean fclean re
+

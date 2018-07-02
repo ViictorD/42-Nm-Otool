@@ -6,7 +6,7 @@
 /*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/23 21:59:37 by vdarmaya          #+#    #+#             */
-/*   Updated: 2018/07/01 16:19:36 by vdarmaya         ###   ########.fr       */
+/*   Updated: 2018/07/02 05:27:21 by vdarmaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ t_sorted			*get_index_block(t_block *b);
 t_block				*new_block(int i, char *name);
 void				free_block(t_block *b);
 void				print_output(t_sorted *index, struct nlist_64 *array, \
-						char *string_table);
+						char *string_table, char **arr);
+void				find_seg64(struct segment_command_64 *seg, char **arr);
+void				put_hexa(long nb);
 
 #endif
