@@ -6,7 +6,7 @@
 /*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/23 22:47:58 by vdarmaya          #+#    #+#             */
-/*   Updated: 2018/07/02 05:29:18 by vdarmaya         ###   ########.fr       */
+/*   Updated: 2018/07/12 16:03:23 by vdarmaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,26 +80,29 @@ static void		handle_binary_otool(int fd)
 {
 	void			*ptr;
 	struct stat		buff;
+	char			fail;
 
-	if (fstat(fd, &buff) < 0)
-	{
+	fail = 0;
+	if (fstat(fd, &buff) < 0 && (fail = 1))
 		ft_putstr("ft_otool: Open file failed");
-		return ;
-	}
-	if ((ptr = mmap(NULL, buff.st_size, PROT_READ, MAP_PRIVATE, fd, 0)) < 0)
-	{
+	else if ((unsigned long)buff.st_size <= sizeof(struct mach_header_64) + \
+		sizeof(struct load_command) && (fail = 1))
+		ft_putstr("ft_otool: Binary too small\n");
+	else if (S_ISDIR(buff.st_mode) && (fail = 1))
+		ft_putstr("ft_otool: Is a directory\n");
+	else if (!S_ISREG(buff.st_mode) && (fail = 1))
+		ft_putstr("ft_otool: Is not a regular file\n");
+	else if ((ptr = mmap(NULL, buff.st_size, PROT_READ, MAP_PRIVATE, fd, \
+		0)) < 0 && (fail = 1))
 		ft_putstr("ft_otool: Mmap binary failed");
+	if (fail)
 		return ;
-	}
 	if ((unsigned int)*(int*)ptr == MH_MAGIC_64)
 		ft_otool(ptr, (struct mach_header_64*)ptr, 0, buff.st_size);
 	else
 		ft_fputstr("ft_nm: Not a 64 bits file format\n", 2);
 	if ((munmap(ptr, buff.st_size)) < 0)
-	{
 		ft_putstr("ft_otool: Munmap binary failed");
-		return ;
-	}
 }
 
 int				main(int ac, char **av)

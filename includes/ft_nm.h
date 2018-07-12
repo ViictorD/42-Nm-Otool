@@ -6,7 +6,7 @@
 /*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/23 21:59:37 by vdarmaya          #+#    #+#             */
-/*   Updated: 2018/07/02 05:27:21 by vdarmaya         ###   ########.fr       */
+/*   Updated: 2018/07/07 02:43:47 by vdarmaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ typedef struct		s_block
 {
 	int				index;
 	char			*name;
+	char			sym;
+	long			addr;
 	struct s_block	*next;
 }					t_block;
 
@@ -35,14 +37,14 @@ typedef struct		s_sorted
 	int				tab_size;
 }					t_sorted;
 
-void				include_before(t_block **begin, t_block *sort, \
+t_block				*include_before(t_block **begin, t_block *sort, \
 						t_block *last, t_block *new);
-t_sorted			*get_index_block(t_block *b);
-t_block				*new_block(int i, char *name);
+t_block				*new_block(int i, struct nlist_64 nlist, \
+						char *string_table);
 void				free_block(t_block *b);
-void				print_output(t_sorted *index, struct nlist_64 *array, \
-						char *string_table, char **arr);
+void				print_output(t_block *begin);
 void				find_seg64(struct segment_command_64 *seg, char **arr);
 void				put_hexa(long nb);
+char				get_sym_char(struct nlist_64 nlist, char **sectname);
 
 #endif
