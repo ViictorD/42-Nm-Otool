@@ -1,2 +1,3 @@
-universal binary
+Fat .a (/usr/lib/*.a)
 little endiant
+tester les /tests/binary

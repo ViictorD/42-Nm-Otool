@@ -16,8 +16,12 @@ SRC_DIR = ./srcs/
 
 FILES_NM = ft_nm.c \
 			ft_nm2.c \
+			ft_nm_uni.c \
+			ft_nm_32.c \
+			ft_nm_322.c \
 			utils.c \
-			sort.c 
+			sort.c \
+			byte_swap.c
 
 FILES_OTOOL = ft_otool.c \
 				utils.c \

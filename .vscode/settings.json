@@ -9,6 +9,10 @@
 		"string_view": "c",
 		"chrono": "c",
 		"__string": "c",
-		"ios": "c"
+		"ios": "c",
+		"bitset": "c",
+		"functional": "c",
+		"memory": "c",
+		"tuple": "c"
 	}
 }

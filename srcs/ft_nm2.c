@@ -6,13 +6,13 @@
 /*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/24 22:23:18 by vdarmaya          #+#    #+#             */
-/*   Updated: 2018/07/07 02:30:36 by vdarmaya         ###   ########.fr       */
+/*   Updated: 2018/07/17 22:37:11 by vdarmaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_nm.h"
 
-static char	find_seg_sym(int nb, char **arr)
+char		find_seg_sym(int nb, char **arr)
 {
 	if (!nb)
 		return ('S');
@@ -39,7 +39,7 @@ void		find_seg64(struct segment_command_64 *seg, char **arr)
 		;
 	j = i;
 	i = -1;
-	while (++i < seg->nsects)
+	while (++i < swap_bits(seg->nsects, 32))
 	{
 		arr[j++] = sec->sectname;
 		++sec;
@@ -49,10 +49,22 @@ void		find_seg64(struct segment_command_64 *seg, char **arr)
 
 void		print_output(t_block *begin)
 {
+	t_block	*save;
+
 	while (begin)
 	{
-		if (begin->addr != 0)
-			put_hexa(begin->addr);
+		if (begin->next && !ft_strcmp(begin->name, begin->next->name) && \
+			begin->sym > 64 && begin->sym < 91 && \
+			begin->next->sym > begin->sym)
+		{
+			save = begin;
+			begin = begin->next;
+			save->next = begin->next;
+			begin->next = save;
+			continue ;
+		}
+		if (begin->addr != 0 || begin->sym == 'A')
+			put_hexa(begin->addr, 16);
 		else
 			ft_putstr("                ");
 		ft_putchar(' ');
@@ -71,7 +83,7 @@ char		get_sym_char(struct nlist_64 nlist, char **sectname)
 	c = 'U';
 	type = nlist.n_type & N_TYPE;
 	if (type == N_UNDF || type == N_PBUD)
-		c = nlist.n_value ? 'C' : 'U';
+		c = swap_bits(nlist.n_value, 64) ? 'C' : 'U';
 	else if (type == N_ABS)
 		c = 'A';
 	else if (type == N_SECT)

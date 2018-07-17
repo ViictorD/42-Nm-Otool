@@ -6,7 +6,7 @@
 /*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/24 22:23:18 by vdarmaya          #+#    #+#             */
-/*   Updated: 2018/07/07 02:30:36 by vdarmaya         ###   ########.fr       */
+/*   Updated: 2018/07/17 20:07:54 by vdarmaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void		print_output(t_block *begin)
 	while (begin)
 	{
 		if (begin->addr != 0)
-			put_hexa(begin->addr);
+			put_hexa(begin->addr, 16);
 		else
 			ft_putstr("                ");
 		ft_putchar(' ');

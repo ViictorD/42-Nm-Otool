@@ -6,7 +6,7 @@
 /*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/23 22:47:58 by vdarmaya          #+#    #+#             */
-/*   Updated: 2018/07/12 16:03:57 by vdarmaya         ###   ########.fr       */
+/*   Updated: 2018/07/17 20:08:00 by vdarmaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static void		print_otool(struct section_64 *sec, void *ptr)
 	ft_putendl("Contents of (__TEXT,__text) section");
 	while (i < sec->size)
 	{
-		put_hexa((long)(sec->addr + i));
+		put_hexa((long)(sec->addr + i), 16);
 		ft_putchar('\t');
 		j = -1;
 		while (++j < 16 && i + j < sec->size)
