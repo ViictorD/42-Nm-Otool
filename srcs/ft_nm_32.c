@@ -83,6 +83,7 @@ void		ft_nm_32(void *ptr, unsigned int filesize, \
 		lc = (void*)lc + swap_bits(lc->cmdsize, 32);
 		++i;
 	}
+	check_corrupted_32(ptr + swap_bits(sym->symoff, 32), swap_bits(sym->nsyms, 32), filesize);
 	sorted = manage_and_sort_32(ptr + swap_bits(sym->symoff, 32), swap_bits(sym->nsyms, 32), \
 		ptr + swap_bits(sym->stroff, 32), arr);
 	print_output_32(sorted);

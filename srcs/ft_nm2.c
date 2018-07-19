@@ -6,7 +6,7 @@
 /*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/24 22:23:18 by vdarmaya          #+#    #+#             */
-/*   Updated: 2018/07/17 22:37:11 by vdarmaya         ###   ########.fr       */
+/*   Updated: 2018/07/19 16:23:24 by vdarmaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,8 @@ void		print_output(t_block *begin)
 			begin->next = save;
 			continue ;
 		}
-		if (begin->addr != 0 || begin->sym == 'A')
+		if (begin->addr != 0 || begin->sym == 'A' || (begin->sym == 'T') || \
+			(begin->sym == 't'))
 			put_hexa(begin->addr, 16);
 		else
 			ft_putstr("                ");

@@ -6,7 +6,7 @@
 /*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/16 22:01:34 by vdarmaya          #+#    #+#             */
-/*   Updated: 2018/07/17 21:31:19 by vdarmaya         ###   ########.fr       */
+/*   Updated: 2018/07/19 18:40:13 by vdarmaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ unsigned int			uswap_32(unsigned int x)
 			(((x) & 0x0000ff00u) << 8) | (((x) & 0x000000ffu) << 24)));
 }
 
-unsigned long	uswap_64(unsigned long x)
+unsigned long			uswap_64(unsigned long x)
 {
 	return ((((x) & 0xff00000000000000ull) >> 56) \
 		| (((x) & 0x00ff000000000000ull) >> 40) \

@@ -6,7 +6,7 @@
 /*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/23 21:58:29 by vdarmaya          #+#    #+#             */
-/*   Updated: 2018/07/17 22:04:13 by vdarmaya         ###   ########.fr       */
+/*   Updated: 2018/07/19 19:48:53 by vdarmaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,11 @@ void		ft_nm(void *ptr, unsigned int filesize, \
 		else if (swap_bits(lc->cmd, 32) == LC_SEGMENT_64)
 			find_seg64((struct segment_command_64*)lc, arr);
 		lc = (void*)lc + swap_bits(lc->cmdsize, 32);
+		if ((void*)lc - ptr >= filesize)
+			ft_exiterror("Binary corrupted", 1);
 		++i;
 	}
+	check_corrupted(ptr + swap_bits(sym->symoff, 32), swap_bits(sym->nsyms, 32), filesize);
 	sorted = manage_and_sort(ptr + swap_bits(sym->symoff, 32), swap_bits(sym->nsyms, 32), \
 		ptr + swap_bits(sym->stroff, 32), arr);
 	print_output(sorted);
@@ -129,10 +132,12 @@ static void		handle_binary(int fd, char *name, int i)
 			ft_putstr(name);
 			ft_putendl(":");
 		}
-		manage_nm(ptr, buff.st_size);
+		manage_nm(ptr, buff.st_size, name);
 	}
 	else if ((unsigned int)*(int*)ptr == FAT_MAGIC || (unsigned int)*(int*)ptr == FAT_CIGAM)
 		ft_nm_uni(ptr, buff.st_size, name, i);
+	else if (*(unsigned long*)ptr == 0x0A3E686372613C21)
+		manage_library(ptr, buff.st_size, name);
 	else
 		ft_fputstr("ft_nm: The file was not recognized as a valid object file\n", 2);
 	if ((munmap(ptr, buff.st_size)) < 0)
@@ -154,12 +159,6 @@ int				main(int ac, char **av)
 			ft_fputendl(": No such file or directory.", 2);
 			continue ;
 		}
-		// if (ac > 2)
-		// {
-		// 	ft_putchar('\n');
-		// 	ft_putstr(av[i]);
-		// 	ft_putendl(":");
-		// }
 		handle_binary(fd, av[i], i);
 		close(fd);
 	}

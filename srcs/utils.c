@@ -6,7 +6,7 @@
 /*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/02 05:25:30 by vdarmaya          #+#    #+#             */
-/*   Updated: 2018/07/17 20:11:05 by vdarmaya         ###   ########.fr       */
+/*   Updated: 2018/07/19 16:49:48 by vdarmaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,34 @@ static void	get_hexa(char *ptr, long nb, int count, int size)
 		ptr[size - 1 - count] = (nb % 16) + 48;
 	else
 		ptr[size - 1 - count] = (nb % 16) + 87;
+}
+
+void	check_corrupted(struct nlist_64 *array, unsigned int nsyms, unsigned int filesize)
+{
+	unsigned int 	i;
+
+	i = 0;
+	if (nsyms >= filesize)
+		ft_exiterror("Binary corrupted", 1);
+	while (i < nsyms)
+	{
+		if (swap_bits(array[i].n_un.n_strx, 32) > filesize)
+			ft_exiterror("Binary corrupted", 1);
+		++i;
+	}
+}
+
+void	check_corrupted_32(struct nlist *array, unsigned int nsyms, unsigned int filesize)
+{
+	unsigned int 	i;
+
+	i = 0;
+	while (i < nsyms)
+	{
+		if (swap_bits(array[i].n_un.n_strx, 32) > filesize)
+			ft_exiterror("Binary corrupted", 1);
+		++i;
+	}
 }
 
 void		print_one_hexa(unsigned char nb, char first)

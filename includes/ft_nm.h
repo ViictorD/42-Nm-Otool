@@ -6,7 +6,7 @@
 /*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/23 21:59:37 by vdarmaya          #+#    #+#             */
-/*   Updated: 2018/07/17 21:30:45 by vdarmaya         ###   ########.fr       */
+/*   Updated: 2018/07/19 19:46:10 by vdarmaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,10 @@
 # include <fcntl.h>
 # include <stdlib.h>
 # include "../libft/libft.h"
+
+# define HEAD_OBJ_SIZE	0x30
+# define HEAD_OBJ_NAME	0x3C
+# define HEAD_OBJ_END	0x3C
 
 typedef struct		s_block
 {
@@ -62,8 +66,13 @@ t_block				*new_block_32(int i, struct nlist nlist, char *string_table);
 char				get_sym_char_32(struct nlist nlist, char **sectname);
 void				find_seg32(struct segment_command *seg, char **arr);
 char				find_seg_sym(int nb, char **arr);
-char				manage_nm(void *ptr, unsigned int filesize);
+char				manage_nm(void *ptr, unsigned int filesize, char *name);
 void				print_output_32(t_block *begin);
+void				check_corrupted(struct nlist_64 *array, unsigned int nsyms, \
+						unsigned int filesize);
+void				check_corrupted_32(struct nlist *array, unsigned int nsyms, \
+						unsigned int filesize);
+void				manage_library(void *ptr, unsigned int filesize, char *name);
 
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/23 22:47:58 by vdarmaya          #+#    #+#             */
-/*   Updated: 2018/07/12 16:03:23 by vdarmaya         ###   ########.fr       */
+/*   Updated: 2018/07/19 19:49:38 by vdarmaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,18 @@ static void		print_otool(struct section_64 *sec, void *ptr)
 
 	i = 0;
 	ft_putendl("Contents of (__TEXT,__text) section");
-	while (i < sec->size)
+	while (i < swap_bits(sec->size, 64))
 	{
-		put_hexa((long)(sec->addr + i));
+		put_hexa((long)(swap_bits(sec->addr, 64) + i), 16);
 		ft_putchar('\t');
 		j = -1;
-		while (++j < 16 && i + j < sec->size)
+		while (++j < 16 && i + j < swap_bits(sec->size, 64))
 		{
 			tmp = *(unsigned char*)(ptr + i + j);
 			print_one_hexa(tmp, 1);
-			ft_putchar(' ');
+			if (!is_ppc_arch(0, 0) || \
+				(is_ppc_arch(0, 0) && (j + 1) % 4 == 0 && j))
+				ft_putchar(' ');
 		}
 		ft_putchar('\n');
 		i += 16;
@@ -43,18 +45,18 @@ static void		ft_otool2(void *ptr, struct load_command *lc, \
 	struct section_64	*sec;
 
 	j = -1;
-	while (++j < seg->nsects)
+	while (++j < swap_bits(seg->nsects, 32))
 	{
 		sec = (struct section_64*)((void*)lc + sizeof(*seg) + \
 			(sizeof(struct section_64) * j));
-		if (sec->offset + sec->size > filesize)
+		if (swap_bits(sec->offset, 32) + swap_bits(sec->size, 64) > filesize)
 			ft_exiterror("Binary corrupted", 1);
 		if (C_SECTION(sec->segname, sec->sectname))
-			print_otool(sec, ptr + sec->offset);
+			print_otool(sec, ptr + swap_bits(sec->offset,32));
 	}
 }
 
-static void		ft_otool(void *ptr, struct mach_header_64 *header, \
+void			ft_otool(void *ptr, struct mach_header_64 *header, \
 					unsigned int i, size_t filesize)
 {
 	struct segment_command_64	*seg;
@@ -64,7 +66,7 @@ static void		ft_otool(void *ptr, struct mach_header_64 *header, \
 	lc = ptr + sizeof(struct mach_header_64);
 	while (i < header->ncmds)
 	{
-		if (lc->cmd == LC_SEGMENT_64)
+		if (swap_bits(lc->cmd, 32) == LC_SEGMENT_64)
 		{
 			seg = (struct segment_command_64*)lc;
 			sec = (struct section_64*)((void*)lc + sizeof(*seg));
@@ -76,7 +78,7 @@ static void		ft_otool(void *ptr, struct mach_header_64 *header, \
 	}
 }
 
-static void		handle_binary_otool(int fd)
+static void		handle_binary_otool(int fd, char *name)
 {
 	void			*ptr;
 	struct stat		buff;
@@ -97,10 +99,21 @@ static void		handle_binary_otool(int fd)
 		ft_putstr("ft_otool: Mmap binary failed");
 	if (fail)
 		return ;
-	if ((unsigned int)*(int*)ptr == MH_MAGIC_64)
-		ft_otool(ptr, (struct mach_header_64*)ptr, 0, buff.st_size);
+	if (*(unsigned int*)ptr == MH_MAGIC_64 || *(unsigned int*)ptr == MH_MAGIC)
+	{
+		ft_putstr(name);
+		ft_putendl(":");
+		manage_otool(ptr, buff.st_size, name);
+	}
+	else if ((unsigned int)*(int*)ptr == FAT_MAGIC || (unsigned int)*(int*)ptr == FAT_CIGAM)
+		ft_otool_uni(ptr, buff.st_size, name);
+	else if (*(unsigned long*)ptr == 0x0A3E686372613C21)
+		manage_library_otool(ptr, buff.st_size, name);
 	else
-		ft_fputstr("ft_nm: Not a 64 bits file format\n", 2);
+	{
+		ft_fputstr(name, 2);
+		ft_fputstr(": is not an object file\n", 2);
+	}
 	if ((munmap(ptr, buff.st_size)) < 0)
 		ft_putstr("ft_otool: Munmap binary failed");
 }
@@ -120,9 +133,9 @@ int				main(int ac, char **av)
 			ft_fputendl(": No such file or directory.", 2);
 			continue ;
 		}
-		ft_putstr(av[i]);
-		ft_putendl(":");
-		handle_binary_otool(fd);
+		// ft_putstr(av[i]);
+		// ft_putendl(":");
+		handle_binary_otool(fd, av[i]);
 		close(fd);
 	}
 	if (ac < 2)

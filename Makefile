@@ -21,10 +21,15 @@ FILES_NM = ft_nm.c \
 			ft_nm_322.c \
 			utils.c \
 			sort.c \
-			byte_swap.c
+			byte_swap.c \
+			manage_library.c \
 
 FILES_OTOOL = ft_otool.c \
+				ft_otool_32.c \
 				utils.c \
+				byte_swap.c \
+				ft_otool_uni.c \
+				manage_library_otool.c
 
 SRCS_NM = $(addprefix $(SRC_DIR), $(FILES_NM))
 
