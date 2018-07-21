@@ -6,7 +6,7 @@
 /*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/23 21:58:29 by vdarmaya          #+#    #+#             */
-/*   Updated: 2018/07/19 19:48:53 by vdarmaya         ###   ########.fr       */
+/*   Updated: 2018/07/21 15:49:05 by vdarmaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ static t_block	*manage_and_sort2(t_block **begin, char *string_table, \
 	last = sort;
 	while (sort)
 	{
-		if (ft_strcmp(string_table + swap_bits(array[i].n_un.n_strx, 32), sort->name) < 0)
+		if (ft_strcmp(string_table + swap_bits(array[i].n_un.n_strx, 32), \
+			sort->name) < 0)
 		{
 			if (include_before(begin, sort, last, \
 				new_block(i, array[i], string_table)) == *begin)
@@ -71,8 +72,17 @@ static t_block	*manage_and_sort(struct nlist_64 *array, unsigned int nsyms, \
 	return (begin);
 }
 
-void		ft_nm(void *ptr, unsigned int filesize, \
-			struct mach_header_64 *header, struct load_command *lc)
+static t_block	*end_nm(void *ptr, struct symtab_command *sym, \
+					unsigned int filesize, char **arr)
+{
+	check_corrupted(ptr + swap_bits(sym->symoff, 32), \
+		swap_bits(sym->nsyms, 32), filesize);
+	return (manage_and_sort(ptr + swap_bits(sym->symoff, 32), \
+		swap_bits(sym->nsyms, 32), ptr + swap_bits(sym->stroff, 32), arr));
+}
+
+void			ft_nm(void *ptr, unsigned int filesize, \
+					struct mach_header_64 *header, struct load_command *lc)
 {
 	struct symtab_command	*sym;
 	unsigned int			i;
@@ -81,7 +91,7 @@ void		ft_nm(void *ptr, unsigned int filesize, \
 
 	i = 0;
 	arr[0] = NULL;
-	while (i < swap_bits(header->ncmds, 32))
+	while (i++ < swap_bits(header->ncmds, 32))
 	{
 		if (swap_bits(lc->cmd, 32) == LC_SYMTAB)
 		{
@@ -94,75 +104,8 @@ void		ft_nm(void *ptr, unsigned int filesize, \
 		lc = (void*)lc + swap_bits(lc->cmdsize, 32);
 		if ((void*)lc - ptr >= filesize)
 			ft_exiterror("Binary corrupted", 1);
-		++i;
 	}
-	check_corrupted(ptr + swap_bits(sym->symoff, 32), swap_bits(sym->nsyms, 32), filesize);
-	sorted = manage_and_sort(ptr + swap_bits(sym->symoff, 32), swap_bits(sym->nsyms, 32), \
-		ptr + swap_bits(sym->stroff, 32), arr);
+	sorted = end_nm(ptr, sym, filesize, arr);
 	print_output(sorted);
 	free_block(sorted);
-}
-
-static void		handle_binary(int fd, char *name, int i)
-{
-	void			*ptr;
-	struct stat		buff;
-	char			fail;
-
-	fail = 0;
-	if (fstat(fd, &buff) < 0 && (fail = 1))
-		ft_fputstr("ft_nm: Open file failed\n", 2);
-	else if ((unsigned long)buff.st_size <= sizeof(struct mach_header_64) + \
-		sizeof(struct load_command) && (fail = 1))
-		ft_fputstr("ft_nm: ft_nm: The file was not recognized as a valid object file\n", 2);
-	else if (S_ISDIR(buff.st_mode) && (fail = 1))
-		ft_fputstr("ft_nm: Is a directory\n", 2);
-	else if (!S_ISREG(buff.st_mode) && (fail = 1))
-		ft_fputstr("ft_nm: Is not a regular file\n", 2);
-	else if ((ptr = mmap(NULL, buff.st_size, PROT_READ, MAP_PRIVATE, fd, \
-		0)) < 0 && (fail = 1))
-		ft_fputstr("ft_nm: Mmap failed", 2);
-	if (fail)
-		return ;
-	if (*(unsigned int*)ptr == MH_MAGIC_64 || *(unsigned int*)ptr == MH_MAGIC)
-	{
-		if (i > 2)
-		{
-			ft_putchar('\n');
-			ft_putstr(name);
-			ft_putendl(":");
-		}
-		manage_nm(ptr, buff.st_size, name);
-	}
-	else if ((unsigned int)*(int*)ptr == FAT_MAGIC || (unsigned int)*(int*)ptr == FAT_CIGAM)
-		ft_nm_uni(ptr, buff.st_size, name, i);
-	else if (*(unsigned long*)ptr == 0x0A3E686372613C21)
-		manage_library(ptr, buff.st_size, name);
-	else
-		ft_fputstr("ft_nm: The file was not recognized as a valid object file\n", 2);
-	if ((munmap(ptr, buff.st_size)) < 0)
-		ft_putstr("ft_nm: Munmap binary failed");
-}
-
-int				main(int ac, char **av)
-{
-	int		i;
-	int		fd;
-
-	i = 0;
-	while (++i < ac)
-	{
-		if ((fd = open(av[i], O_RDONLY)) < 0)
-		{
-			ft_fputstr("ft_nm: ", 2);
-			ft_fputstr(av[i], 2);
-			ft_fputendl(": No such file or directory.", 2);
-			continue ;
-		}
-		handle_binary(fd, av[i], i);
-		close(fd);
-	}
-	if (ac < 2)
-		ft_fputendl("ft_nm: No such file or directory.", 2);
-	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/23 21:59:37 by vdarmaya          #+#    #+#             */
-/*   Updated: 2018/07/19 19:46:10 by vdarmaya         ###   ########.fr       */
+/*   Updated: 2018/07/21 15:56:05 by vdarmaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ void				print_output(t_block *begin);
 void				find_seg64(struct segment_command_64 *seg, char **arr);
 void				put_hexa(long nb, int size);
 char				get_sym_char(struct nlist_64 nlist, char **sectname);
-void				ft_nm_uni(void *ptr, unsigned int filesize, char *name, int j);
+void				ft_nm_uni(void *ptr, unsigned int filesize, \
+						char *name, int j);
 void				ft_nm(void *ptr, unsigned int filesize, \
 						struct mach_header_64 *header, struct load_command *lc);
 void				ft_nm_32(void *ptr, unsigned int filesize, \
@@ -62,17 +63,18 @@ int					swap_32(int x);
 unsigned int		uswap_32(unsigned int x);
 unsigned long		uswap_64(unsigned long x);
 char				get_rev(char set, char value);
-t_block				*new_block_32(int i, struct nlist nlist, char *string_table);
+t_block				*new_block_32(int i, struct nlist nlist, \
+						char *string_table);
 char				get_sym_char_32(struct nlist nlist, char **sectname);
 void				find_seg32(struct segment_command *seg, char **arr);
 char				find_seg_sym(int nb, char **arr);
 char				manage_nm(void *ptr, unsigned int filesize, char *name);
 void				print_output_32(t_block *begin);
-void				check_corrupted(struct nlist_64 *array, unsigned int nsyms, \
-						unsigned int filesize);
-void				check_corrupted_32(struct nlist *array, unsigned int nsyms, \
-						unsigned int filesize);
-void				manage_library(void *ptr, unsigned int filesize, char *name);
-
+void				check_corrupted(struct nlist_64 *array, \
+						unsigned int nsyms, unsigned int filesize);
+void				check_corrupted_32(struct nlist *array, \
+						unsigned int nsyms, unsigned int filesize);
+void				manage_library(void *ptr, unsigned int filesize, \
+						char *name);
 
 #endif

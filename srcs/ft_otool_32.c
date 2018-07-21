@@ -6,7 +6,7 @@
 /*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/19 17:57:26 by vdarmaya          #+#    #+#             */
-/*   Updated: 2018/07/19 19:17:00 by vdarmaya         ###   ########.fr       */
+/*   Updated: 2018/07/21 14:32:09 by vdarmaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static void		ft_otool_322(void *ptr, struct load_command *lc, \
 		if (swap_bits(sec->offset, 32) + swap_bits(sec->size, 32) > filesize)
 			ft_exiterror("Binary corrupted", 1);
 		if (C_SECTION(sec->segname, sec->sectname))
-			print_otool_32(sec, ptr + swap_bits(sec->offset,32));
+			print_otool_32(sec, ptr + swap_bits(sec->offset, 32));
 	}
 }
 

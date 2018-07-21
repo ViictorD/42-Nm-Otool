@@ -6,7 +6,7 @@
 /*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/23 22:48:43 by vdarmaya          #+#    #+#             */
-/*   Updated: 2018/07/19 19:50:04 by vdarmaya         ###   ########.fr       */
+/*   Updated: 2018/07/21 15:56:46 by vdarmaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,10 @@
 
 void				put_hexa(long nb, int size);
 void				print_one_hexa(unsigned char nb, char first);
-void				check_corrupted(struct nlist_64 *array, unsigned int nsyms, \
-						unsigned int filesize);
-void				check_corrupted_32(struct nlist *array, unsigned int nsyms, \
-						unsigned int filesize);
+void				check_corrupted(struct nlist_64 *array, \
+						unsigned int nsyms, unsigned int filesize);
+void				check_corrupted_32(struct nlist *array, \
+						unsigned int nsyms, unsigned int filesize);
 unsigned long		swap_bits(unsigned long value, int base);
 unsigned int		uswap_32(unsigned int x);
 unsigned long		uswap_64(unsigned long x);
@@ -46,7 +46,7 @@ void				ft_otool(void *ptr, struct mach_header_64 *header, \
 char				get_rev(char set, char value);
 void				ft_otool_uni(void *ptr, unsigned int filesize, char *name);
 char				is_ppc_arch(char set, char value);
-void				manage_library_otool(void *ptr, unsigned int filesize, char *name);
-
+void				manage_library_otool(void *ptr, unsigned int filesize, \
+						char *name);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/02 05:25:30 by vdarmaya          #+#    #+#             */
-/*   Updated: 2018/07/19 16:49:48 by vdarmaya         ###   ########.fr       */
+/*   Updated: 2018/07/21 15:53:59 by vdarmaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,10 @@ static void	get_hexa(char *ptr, long nb, int count, int size)
 		ptr[size - 1 - count] = (nb % 16) + 87;
 }
 
-void	check_corrupted(struct nlist_64 *array, unsigned int nsyms, unsigned int filesize)
+void		check_corrupted(struct nlist_64 *array, unsigned int nsyms, \
+				unsigned int filesize)
 {
-	unsigned int 	i;
+	unsigned int	i;
 
 	i = 0;
 	if (nsyms >= filesize)
@@ -37,9 +38,10 @@ void	check_corrupted(struct nlist_64 *array, unsigned int nsyms, unsigned int fi
 	}
 }
 
-void	check_corrupted_32(struct nlist *array, unsigned int nsyms, unsigned int filesize)
+void		check_corrupted_32(struct nlist *array, unsigned int nsyms, \
+				unsigned int filesize)
 {
-	unsigned int 	i;
+	unsigned int	i;
 
 	i = 0;
 	while (i < nsyms)

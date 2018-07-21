@@ -14,7 +14,8 @@ DIR_LIB = ./libft/
 
 SRC_DIR = ./srcs/
 
-FILES_NM = ft_nm.c \
+FILES_NM = main_nm.c \
+			ft_nm.c \
 			ft_nm2.c \
 			ft_nm_uni.c \
 			ft_nm_32.c \
@@ -23,13 +24,16 @@ FILES_NM = ft_nm.c \
 			sort.c \
 			byte_swap.c \
 			manage_library.c \
+			special_var.c
 
-FILES_OTOOL = ft_otool.c \
+FILES_OTOOL = main_otool.c \
+				ft_otool.c \
 				ft_otool_32.c \
 				utils.c \
 				byte_swap.c \
 				ft_otool_uni.c \
-				manage_library_otool.c
+				manage_library_otool.c \
+				special_var.c
 
 SRCS_NM = $(addprefix $(SRC_DIR), $(FILES_NM))
 

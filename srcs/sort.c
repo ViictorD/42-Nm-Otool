@@ -6,7 +6,7 @@
 /*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/24 20:12:15 by vdarmaya          #+#    #+#             */
-/*   Updated: 2018/07/19 11:58:09 by vdarmaya         ###   ########.fr       */
+/*   Updated: 2018/07/21 15:53:04 by vdarmaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ t_block		*new_block_32(int i, struct nlist nlist, char *string_table)
 	new->index = i;
 	new->sym = 0;
 	new->addr = swap_bits(nlist.n_value, 32);
-	new->name = ft_strdup(string_table + swap_bits(nlist.n_un.n_strx, 32)); // maybe prb
+	new->name = ft_strdup(string_table + swap_bits(nlist.n_un.n_strx, 32));
 	if (!ft_strcmp(new->name, ""))
 		ft_exiterror("Binary corrupted", 1);
 	new->next = NULL;

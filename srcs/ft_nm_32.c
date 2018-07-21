@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_nm_32.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/07/21 15:14:01 by vdarmaya          #+#    #+#             */
+/*   Updated: 2018/07/21 15:16:29 by vdarmaya         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_nm.h"
 
 static t_block	*manage_and_sort_322(t_block **begin, char *string_table, \
@@ -10,7 +22,8 @@ static t_block	*manage_and_sort_322(t_block **begin, char *string_table, \
 	last = sort;
 	while (sort)
 	{
-		if (ft_strcmp(string_table + swap_bits(array[i].n_un.n_strx, 32), sort->name) < 0) // maybe prb
+		if (ft_strcmp(string_table + swap_bits(array[i].n_un.n_strx, 32), \
+			sort->name) < 0)
 		{
 			if (include_before(begin, sort, last, \
 				new_block_32(i, array[i], string_table)) == *begin)
@@ -59,8 +72,7 @@ static t_block	*manage_and_sort_32(struct nlist *array, unsigned int nsyms, \
 	return (begin);
 }
 
-
-void		ft_nm_32(void *ptr, unsigned int filesize, \
+void			ft_nm_32(void *ptr, unsigned int filesize, \
 			struct mach_header *header, struct load_command *lc)
 {
 	struct symtab_command	*sym;
@@ -70,7 +82,7 @@ void		ft_nm_32(void *ptr, unsigned int filesize, \
 
 	i = 0;
 	arr[0] = NULL;
-	while (i < swap_bits(header->ncmds, 32))
+	while (i++ < swap_bits(header->ncmds, 32))
 	{
 		if (swap_bits(lc->cmd, 32) == LC_SYMTAB)
 		{
@@ -81,11 +93,11 @@ void		ft_nm_32(void *ptr, unsigned int filesize, \
 		else if (swap_bits(lc->cmd, 32) == LC_SEGMENT)
 			find_seg32((struct segment_command*)lc, arr);
 		lc = (void*)lc + swap_bits(lc->cmdsize, 32);
-		++i;
 	}
-	check_corrupted_32(ptr + swap_bits(sym->symoff, 32), swap_bits(sym->nsyms, 32), filesize);
-	sorted = manage_and_sort_32(ptr + swap_bits(sym->symoff, 32), swap_bits(sym->nsyms, 32), \
-		ptr + swap_bits(sym->stroff, 32), arr);
+	check_corrupted_32(ptr + swap_bits(sym->symoff, 32), \
+		swap_bits(sym->nsyms, 32), filesize);
+	sorted = manage_and_sort_32(ptr + swap_bits(sym->symoff, 32), \
+		swap_bits(sym->nsyms, 32), ptr + swap_bits(sym->stroff, 32), arr);
 	print_output_32(sorted);
 	free_block(sorted);
 }

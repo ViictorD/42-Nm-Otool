@@ -6,7 +6,7 @@
 /*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 19:26:20 by vdarmaya          #+#    #+#             */
-/*   Updated: 2018/07/19 11:33:15 by vdarmaya         ###   ########.fr       */
+/*   Updated: 2018/07/21 15:17:39 by vdarmaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void		find_seg32(struct segment_command *seg, char **arr)
 {
 	unsigned int		i;
 	int					j;
-	struct section	*sec;
+	struct section		*sec;
 
 	sec = (void*)seg + sizeof(struct segment_command);
 	i = -1;

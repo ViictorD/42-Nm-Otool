@@ -6,7 +6,7 @@
 /*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/16 22:01:34 by vdarmaya          #+#    #+#             */
-/*   Updated: 2018/07/19 18:40:13 by vdarmaya         ###   ########.fr       */
+/*   Updated: 2018/07/21 15:11:44 by vdarmaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,13 @@ static unsigned short	uswap_16(unsigned short x)
 
 int						swap_32(int x)
 {
-	return (((((x) & 0xff000000u) >> 24) | (((x) & 0x00ff0000u) >>  8) | \
+	return (((((x) & 0xff000000u) >> 24) | (((x) & 0x00ff0000u) >> 8) | \
 			(((x) & 0x0000ff00u) << 8) | (((x) & 0x000000ffu) << 24)));
 }
 
 unsigned int			uswap_32(unsigned int x)
 {
-	return (((((x) & 0xff000000u) >> 24) | (((x) & 0x00ff0000u) >>  8) | \
+	return (((((x) & 0xff000000u) >> 24) | (((x) & 0x00ff0000u) >> 8) | \
 			(((x) & 0x0000ff00u) << 8) | (((x) & 0x000000ffu) << 24)));
 }
 
@@ -39,15 +39,6 @@ unsigned long			uswap_64(unsigned long x)
 		| (((x) & 0x0000000000ff0000ull) << 24) \
 		| (((x) & 0x000000000000ff00ull) << 40) \
 		| (((x) & 0x00000000000000ffull) << 56));
-}
-
-char					get_rev(char set, char value)
-{
-	static char rev = 0;
-
-	if (set)
-		rev = value;
-	return (rev);
 }
 
 unsigned long			swap_bits(unsigned long value, int base)

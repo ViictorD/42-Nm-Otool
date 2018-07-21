@@ -6,13 +6,13 @@
 /*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/19 19:47:11 by vdarmaya          #+#    #+#             */
-/*   Updated: 2018/07/19 19:55:38 by vdarmaya         ###   ########.fr       */
+/*   Updated: 2018/07/21 15:52:42 by vdarmaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_otool.h"
 
-static unsigned long parse_nb(void *ptr)
+static unsigned long	parse_nb(void *ptr)
 {
 	char			buff[9];
 	unsigned int	i;
@@ -27,7 +27,7 @@ static unsigned long parse_nb(void *ptr)
 	return (ft_atoi(buff));
 }
 
-static unsigned int	get_name_space(unsigned int len)
+static unsigned int		get_name_space(unsigned int len)
 {
 	unsigned int	count;
 
@@ -37,7 +37,8 @@ static unsigned int	get_name_space(unsigned int len)
 	return (count);
 }
 
-void	manage_library_otool(void *ptr, unsigned int filesize, char *name)
+void					manage_library_otool(void *ptr, unsigned int filesize, \
+							char *name)
 {
 	unsigned long	size;
 	void			*tmp;
