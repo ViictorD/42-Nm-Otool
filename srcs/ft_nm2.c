@@ -6,7 +6,7 @@
 /*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/24 22:23:18 by vdarmaya          #+#    #+#             */
-/*   Updated: 2018/07/19 16:23:24 by vdarmaya         ###   ########.fr       */
+/*   Updated: 2018/07/21 17:01:29 by vdarmaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,14 @@ char		find_seg_sym(int nb, char **arr)
 		return ('S');
 }
 
-void		find_seg64(struct segment_command_64 *seg, char **arr)
+void		find_seg64(struct segment_command_64 *seg, char **arr, unsigned int filesize)
 {
 	unsigned int		i;
 	int					j;
 	struct section_64	*sec;
 
+	if (seg->filesize + seg->fileoff > filesize)
+		ft_exiterror("Binary corrupted.", 1);
 	sec = (void*)seg + sizeof(struct segment_command_64);
 	i = -1;
 	while (arr[++i])

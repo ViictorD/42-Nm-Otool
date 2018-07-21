@@ -6,7 +6,7 @@
 /*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/23 21:58:29 by vdarmaya          #+#    #+#             */
-/*   Updated: 2018/07/21 15:49:05 by vdarmaya         ###   ########.fr       */
+/*   Updated: 2018/07/21 17:01:23 by vdarmaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ void			ft_nm(void *ptr, unsigned int filesize, \
 				ft_exiterror("Binary corrupted", 1);
 		}
 		else if (swap_bits(lc->cmd, 32) == LC_SEGMENT_64)
-			find_seg64((struct segment_command_64*)lc, arr);
+			find_seg64((struct segment_command_64*)lc, arr, filesize);
 		lc = (void*)lc + swap_bits(lc->cmdsize, 32);
 		if ((void*)lc - ptr >= filesize)
 			ft_exiterror("Binary corrupted", 1);

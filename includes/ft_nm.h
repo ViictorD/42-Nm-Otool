@@ -6,7 +6,7 @@
 /*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/23 21:59:37 by vdarmaya          #+#    #+#             */
-/*   Updated: 2018/07/21 15:56:05 by vdarmaya         ###   ########.fr       */
+/*   Updated: 2018/07/21 17:01:17 by vdarmaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,8 @@ t_block				*new_block(int i, struct nlist_64 nlist, \
 						char *string_table);
 void				free_block(t_block *b);
 void				print_output(t_block *begin);
-void				find_seg64(struct segment_command_64 *seg, char **arr);
+void				find_seg64(struct segment_command_64 *seg, char **arr, \
+						unsigned int filesize);
 void				put_hexa(long nb, int size);
 char				get_sym_char(struct nlist_64 nlist, char **sectname);
 void				ft_nm_uni(void *ptr, unsigned int filesize, \
