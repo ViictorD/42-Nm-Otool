@@ -6,7 +6,7 @@
 /*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/19 17:31:09 by vdarmaya          #+#    #+#             */
-/*   Updated: 2018/07/21 15:50:20 by vdarmaya         ###   ########.fr       */
+/*   Updated: 2018/07/21 17:27:33 by vdarmaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,14 @@ char		manage_otool(void *ptr, unsigned int filesize, char *name)
 	return (1);
 }
 
+static void	print_name_arch(char *name, const char *cpu)
+{
+	ft_putstr(name);
+	ft_putstr(" (architecture ");
+	ft_putstr(cpu);
+	ft_putstr("):\n");
+}
+
 static void	try_all_arch_otool(void *ptr, unsigned int filesize, \
 				unsigned int i, char *name)
 {
@@ -45,12 +53,11 @@ static void	try_all_arch_otool(void *ptr, unsigned int filesize, \
 		arch = (struct fat_arch*)(ptr + sizeof(struct fat_header) + \
 			(sizeof(struct fat_arch) * i++));
 		new_ptr = ptr + uswap_32(arch->offset);
+		if ((long)new_ptr >= (long)(ptr + filesize))
+			ft_exiterror("Binary corrupted.", 1);
 		cpu = NXGetArchInfoFromCpuType(swap_32(arch->cputype), \
 			swap_32(arch->cpusubtype));
-		ft_putstr(name);
-		ft_putstr(" (architecture ");
-		ft_putstr(cpu->name);
-		ft_putstr("):\n");
+		print_name_arch(name, cpu->name);
 		!ft_strcmp(cpu->name, "ppc") ? is_ppc_arch(1, 1) : 0;
 		if (!manage_otool(new_ptr, filesize, name))
 		{

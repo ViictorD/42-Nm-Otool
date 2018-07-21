@@ -6,7 +6,7 @@
 /*   By: vdarmaya <vdarmaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/23 22:47:58 by vdarmaya          #+#    #+#             */
-/*   Updated: 2018/07/21 14:28:18 by vdarmaya         ###   ########.fr       */
+/*   Updated: 2018/07/21 17:23:18 by vdarmaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,8 @@ void			ft_otool(void *ptr, struct mach_header_64 *header, \
 				ft_otool2(ptr, lc, seg, filesize);
 		}
 		lc = (void*)lc + lc->cmdsize;
+		if ((long)lc > (long)(ptr + filesize))
+			ft_exiterror("Binary corrupted.", 1);
 		++i;
 	}
 }
